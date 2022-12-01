@@ -3,10 +3,12 @@ package scrummaster.dataclasses;
 import java.sql.*;
 import scrummaster.DBConnection;
 
-public class EmployeeRole {
+public class EmployeeRole extends ScrumMasterCommand{
     // TODO Aaron
     private int id;
     private String desc;
+    public EmployeeRole() {
+    }
 
     public EmployeeRole(int id, String desc) {
         this.id = id;

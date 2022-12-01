@@ -1,46 +1,33 @@
 
 package scrummaster.dataclasses;
+
 import java.util.Scanner;
-import java.sql.*;
+import scrummaster.enums.*;
+
 public class ScrumMasterCommand {
 
-    public void excuteCommandFuncation(ScrumMasterCommand scrum, Scanner scan, Request req, Connection dbcon) {
-        req.callMethod(req, scrum, scan, dbcon);
+    public void excuteCommandFuncation(ScrumMasterCommand scrum,  Request req) {
+        req.callMethod(req, scrum);
     }
-
-    public void getFuncation(Scanner scan, Request req, Connection dbcon) {
+    //this method should be used for get 1 element
+    public void getFunction( Request req) {
         System.out.println("no support for get  hello ");
     }
-
-    public void createFuncation(Scanner scan, Request req, Connection dbcon) {
+    //this method should be used for adding elements to the database
+    public void deleteFunction( Request req) {
         System.out.println("no support create function");
     }
-}
-/**
- *
- * @author Jordan
- */
-//connect to the scrumMaster Comnmand line defualt option 
-enum Request {
-    GET,
-    CREATE,
-    INVALID;
-
-    public static Request setRequest(String commandLineRequest) {
-        try {
-            return Request.valueOf(commandLineRequest.toUpperCase());
-        } catch (Exception e) {
-            return INVALID;
-        }
-
+    //this method should be used for select all the element
+    public void insertFunction(Request req){
+        System.out.println("no support create function");
     }
-    // ask brandon 
-    public void callMethod(Request req, ScrumMasterCommand scrum, Scanner scan, Connection dbcon){
-         if(req == Request.CREATE){
-             scrum.createFuncation(scan, req,  dbcon);
-             
-         }
-         else if (req == Request.GET)
-             scrum.getFuncation(scan, req,  dbcon);
+     //this method should be used for select all the element
+     public void updateFunction(Request req){
+         System.out.println("no support create function");
     }
+    //this method should be used for select all the element
+     public void listFunction(Request req){
+       System.out.println("no support create function");
+     }
+
 }

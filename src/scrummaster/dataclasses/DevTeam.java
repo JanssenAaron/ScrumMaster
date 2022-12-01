@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.sql.*;
 import scrummaster.DBConnection;
 
-public class DevTeam {
+public class DevTeam extends ScrumMasterCommand {
     // TODO Aaron
     private int id;
     private int scrumTeamId;
     private int sprintId;
-
+    public DevTeam() {
+    }
     public DevTeam(int id, int scrumTeamId, int sprintId) {
         this.id = id;
         this.scrumTeamId = scrumTeamId;

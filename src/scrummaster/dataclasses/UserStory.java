@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import scrummaster.DBConnection;
 
-public class UserStory {
+public class UserStory extends ScrumMasterCommand {
     
     private int id;
     private int priority;

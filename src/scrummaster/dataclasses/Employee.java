@@ -4,7 +4,7 @@ import java.sql.*;
 
 import scrummaster.DBConnection;
 
-public class Employee {
+public class Employee extends ScrumMasterCommand {
     // TODO Aaron
 
     private int id;
@@ -12,7 +12,8 @@ public class Employee {
     private String lName;
     private int roleAssignment;
     private int devTeamId;
-
+    public Employee() {
+    }
     public Employee(int id, String fName, String lName, int roleAssignment, int devTeamId) {
         this.id = id;
         this.fName = fName;

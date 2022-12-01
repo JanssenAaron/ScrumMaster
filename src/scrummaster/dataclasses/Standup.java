@@ -7,7 +7,7 @@ import java.sql.Date;
 
 import scrummaster.DBConnection;
 
-public class Standup {
+public class Standup extends ScrumMasterCommand {
     
     private String note;
     private Date date;
