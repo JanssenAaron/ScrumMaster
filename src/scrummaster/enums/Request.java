@@ -30,6 +30,7 @@ public enum Request {
               value = INVALID; 
             }
         }
+        scan.close();
         return value; 
 
     }

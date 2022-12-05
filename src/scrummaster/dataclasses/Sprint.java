@@ -1,7 +1,10 @@
 package scrummaster.dataclasses;
 
-
 import java.sql.*;
+import java.util.ArrayList;
+
+import scrummaster.DBConnection;
+import scrummaster.enums.Request;
 
 /**
  *
@@ -13,36 +16,95 @@ public class Sprint extends ScrumMasterCommand {
     private java.sql.Time endDate;
     private String notes;
     private int projectId;
-    public Sprint(){
+
+    public Sprint() {
     }
-    
-    public Sprint(int tableId,java.sql.Time startDataAndTime,java.sql.Time endDataAndTime,String text, int projectID ){
+
+    public Sprint(int tableId, java.sql.Time startDataAndTime, java.sql.Time endDataAndTime, String text,
+            int projectID) {
         id = tableId;
         this.startDate = startDataAndTime;
         this.endDate = endDataAndTime;
         this.notes = text;
         this.projectId = projectID;
     }
-    public Sprint findSprint(Connection con, int tableId ){
+
+    public Sprint findSprint( int tableId) {
         String selectEmployee = "select * from sprint"
                 + " where id = ?";
-        try{
-            PreparedStatement pstmt = con.prepareStatement(selectEmployee);
+        try {
+            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
-            
+
             ResultSet rsSprint = pstmt.executeQuery();
             return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-             rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+                    rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+        } catch (SQLException e) {
+
         }
-        catch(SQLException e ){
-            
-        }
-        return null;  
+        return null;
     }
 
-    
-      
-   // -------------------------------get--------------------set------------------------------------------------------------------------------
+    // add sprint
+    public Sprint addSprint(java.sql.Time start, java.sql.Time end, String note, int proID) {
+        String insert = "INSERT INTO SPRINT" + " (start_date,end_date, notes, project_id) values" + " (?,?,?,?);";
+        try {
+            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);
+            pstmt.setObject(1, start);
+            pstmt.setObject(2, end);
+            pstmt.setObject(3, note);
+            pstmt.setInt(4, proID);
+
+            ResultSet rsSprint = pstmt.executeQuery();
+            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
+                    rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+        } catch (SQLException e) {
+
+        }
+        return null;
+    }
+    //select all 
+    public void listFunction(Request req){
+        ArrayList<Sprint>  listSprint = selectAllSprint();
+        listInput((Sprint[]) listSprint.toArray());
+      }
+    public ArrayList<Sprint>  selectAllSprint(){
+        ArrayList<Sprint> sprintTable = new ArrayList<>();
+        String selectItem = "select * from sprint";
+        try{
+            ResultSet rsSprint = DBConnection.CONNECTION.prepareStatement(selectItem).executeQuery();
+            while(rsSprint.next()){
+                sprintTable.add(new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
+                rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id")));
+            }
+
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return sprintTable;
+    }
+    ///----------------------------delete----------------------------------------
+    public void deleteFunction( Request req) {
+        deleteSprintById();
+    }
+    private Sprint  deleteSprintById(){
+        String selectItem = "DELETE FROM sprint WHERE sprint_id = ?;";
+        try{
+            PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
+            rs.setInt(id, 1);
+            ResultSet rsSprint = rs.executeQuery();
+            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
+            rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+   
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+     // ------------------------basic 
+    // -------------------------------get--------------------set------------------------------------------------------------------------------
     /**
      * @return the startDate
      */
@@ -98,7 +160,7 @@ public class Sprint extends ScrumMasterCommand {
     public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
-    
+
     /**
      * @return the id
      */
@@ -112,8 +174,5 @@ public class Sprint extends ScrumMasterCommand {
     public void setId(int id) {
         this.id = id;
     }
-
-
-
 
 }

@@ -1,7 +1,7 @@
 
 package scrummaster.dataclasses;
-
 import java.util.Scanner;
+
 import scrummaster.enums.*;
 
 public class ScrumMasterCommand {
@@ -29,5 +29,20 @@ public class ScrumMasterCommand {
      public void listFunction(Request req){
        System.out.println("no support create function");
      }
-
+     public void listInput(ScrumMasterCommand[] rows){
+              for (ScrumMasterCommand x: rows)
+                  x.toString();
+     }
+     public int getInt(){
+        Scanner scan = new Scanner(System.in);
+        while(scan.hasNextInt()){
+            System.out.println("type a int");
+            scan.next();
+        }
+        return scan.nextInt();
+     }
+     public String getString(){
+        Scanner scan = new Scanner(System.in);
+        return scan.next();
+     }
 }

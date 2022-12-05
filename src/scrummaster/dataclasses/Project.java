@@ -24,12 +24,22 @@ public class Project extends ScrumMasterCommand {
     
     public Project() {
     }
-    
-    public ScrumTeam findProjectById(Connection con, int tableId) {
+    //--------------------------------------get--------------------------------------------
+    public void getFunction( Request req) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("options: find scrum team 'project_id' or 'scrum_id'  ");
+        System.out.println(scan.next());
+        if ("project_id".equalsIgnoreCase(scan.next())) 
+            findProjectById( getInt()).toString();
+        else if("scrum_id".equalsIgnoreCase(scan.next()))
+            findByScrumTeamId( getInt()).toString();
+        
+    }
+    public ScrumTeam findProjectById( int tableId) {
         String selectEmployee = "select * from project"
                 + " where id = ?";
         try {
-            PreparedStatement pstmt = con.prepareStatement(selectEmployee);
+            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
             return new ScrumTeam(rsscrumteam.getInt("employee_id"));
@@ -38,13 +48,13 @@ public class Project extends ScrumMasterCommand {
         }
     }
     
-    public ScrumTeam findByScrumTeamId(Connection con, int tableId) {
+    public ScrumTeam findByScrumTeamId( int tableId) {
         String selectEmployee = "select * from project"
                 + " inner join scrum_team "
                 + "scrum_id.scrum_team_id = project.scrum_team_id"
                 + "where project.scrum_team_id = ?";
         try {
-            PreparedStatement pstmt = con.prepareStatement(selectEmployee);
+            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
             return new ScrumTeam(rsscrumteam.getInt("employee_id"));
@@ -53,23 +63,45 @@ public class Project extends ScrumMasterCommand {
         }
     }
     
-
-
-    public void getFuncation(Scanner scan, Request req) {
-        System.out.println("options: find scrum team id ");
-        System.out.println(scan.next());
-        if ("find".equalsIgnoreCase(scan.next())) {
-            int hold =0 ;
-            System.out.println("enter an int");
-            while(!scan.hasNextInt())
-                hold = scan.nextInt();
-            findByScrumTeamId(DBConnection.CONNECTION, hold);
-        }
-        
+    //-----------------------------------create-----------------------------------------------------------
+    public void createFunction( Request req) {
+        createProject(getInt(), getString() );
     }
-    
-    public void createFunction(Scanner scan, Request req) {
-        System.out.println("no support create funcation we are here fjkaldsjf kla");
+    public Project createProject(int scrum_Id, String summarys){
+        //int scrumId, String summary
+        String insert = "INSERT INTO SPRINT" + " (scrum_team_id, description ) values" + " (?,?);";
+        try {
+            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);
+            pstmt.setInt(1, scrum_Id);
+            pstmt.setObject(2, summarys);
+
+            ResultSet rsSprint = pstmt.executeQuery();
+            return new Project(rsSprint.getInt("project_id"), rsSprint.getInt("scrum_team_id"),
+             rsSprint.getNString("description"));
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    //------------------delete-------------------------
+    public void deleteFunction( Request req) {
+        System.out.println("place an id to delete");
+        deleteProject(getId()).toString();
+    }
+    public Project deleteProject(int pID){
+        String selectItem = "DELETE FROM project WHERE sprint_id = ?;";
+        try{
+            PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
+            rs.setInt(pID, 1);
+            ResultSet rsSprint = rs.executeQuery();
+            return new Project(rsSprint.getInt("project_id"), rsSprint.getInt("scrum_team_id"),
+             rsSprint.getNString("description"));
+   
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return null;
     }
 
     /**

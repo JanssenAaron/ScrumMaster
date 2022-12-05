@@ -2,7 +2,6 @@
 package scrummaster;
 
 import java.util.EnumSet;
-import java.util.Scanner;
 
 import scrummaster.enums.Request;
 import scrummaster.enums.ScrumClasses;
