@@ -64,7 +64,7 @@ public class Project extends ScrumMasterCommand {
     }
     
     //-----------------------------------create-----------------------------------------------------------
-    public void createFunction( Request req) {
+    public void insertFunction( Request req) {
         createProject(getInt(), getString() );
     }
     public Project createProject(int scrum_Id, String summarys){
