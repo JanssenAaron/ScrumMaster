@@ -76,4 +76,24 @@ public class Standup extends ScrumMasterCommand {
         return count;
     }
 
+    public void insertFunction(Request req) {
+
+    }
+
+    public void deleteFunction(Request req) {
+
+    }
+
+    public void getFunction(Request req) {
+
+    }
+
+    public void listFunction(Request req) {
+
+    }
+
+    public void updateFunction(Request req) {
+        
+    }
+
 }
