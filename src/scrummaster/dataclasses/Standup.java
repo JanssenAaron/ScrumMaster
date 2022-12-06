@@ -3,9 +3,12 @@ package scrummaster.dataclasses;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.sql.Date;
 
 import scrummaster.DBConnection;
+import scrummaster.enums.Request;
 
 public class Standup extends ScrumMasterCommand {
     
@@ -47,19 +50,35 @@ public class Standup extends ScrumMasterCommand {
         this.sprintId = sprintId;
     }
 
-    public static Standup findById(int id) throws SQLException {
+    public static ArrayList<Standup> findBySprintId(int sprintId) throws SQLException {
         PreparedStatement pstmt = DBConnection.CONNECTION
-                .prepareStatement("select * from standup where id = ?");
-        pstmt.setInt(0, id);
+                .prepareStatement("select * from standup where sprint_id = ?");
+        pstmt.setInt(0, sprintId);
         ResultSet results = pstmt.executeQuery();
-        if (results.next()) {
+        ArrayList<Standup> list = new ArrayList<>();
+        while (results.next()) {
             Standup st = new Standup();
             st.setNote(results.getString("note"));
             st.setDate(results.getDate("date_of_standup"));
             st.setSprintId(results.getInt("sprint_id"));
-            return st;
+            list.add(st);
         }
-        return null;
+        return list;
+    }
+
+    public static ArrayList<Standup> listStandups() throws SQLException {
+        PreparedStatement pstmt = DBConnection.CONNECTION
+                .prepareStatement("select * from standup");
+        ResultSet results = pstmt.executeQuery();
+        ArrayList<Standup> list = new ArrayList<>();
+        while (results.next()) {
+            Standup st = new Standup();
+            st.setNote(results.getString("note"));
+            st.setDate(results.getDate("date_of_standup"));
+            st.setSprintId(results.getInt("sprint_id"));
+            list.add(st);
+        }
+        return list;
     }
 
     public static int saveStandups(Standup... sts) throws SQLException {
@@ -76,24 +95,53 @@ public class Standup extends ScrumMasterCommand {
         return count;
     }
 
-    public void insertFunction(Request req) {
+    public static int deleteById(int id) throws SQLException {
+        PreparedStatement pstmt = DBConnection.CONNECTION
+                .prepareStatement("delete from standup where id = ?");
+        pstmt.setInt(0, id);
+        return pstmt.executeUpdate();
+    }
 
+    public void insertFunction(Request req) {
+        Standup st = new Standup(getString(), readDate(), getInt());
+        try {
+            saveStandups(st);
+        } catch (SQLException e) {
+            System.out.println("Could not save standup to database");
+        }
     }
 
     public void deleteFunction(Request req) {
-
+        try {
+            int num = deleteById(getInt());
+            System.out.printf("Deleted %d entries from standup table\n", num);
+        } catch (SQLException e) {
+            System.out.println("Could not delete from the database");
+        }
     }
 
     public void getFunction(Request req) {
-
+        try {
+            ArrayList<Standup> sts = findBySprintId(getInt());
+            sts.forEach(System.out::println);
+        } catch (SQLException e) {
+            System.out.println("Could not retrieve items from database");
+        }
     }
 
     public void listFunction(Request req) {
-
+        try {
+            ArrayList<Standup> sts = listStandups();
+            sts.forEach(System.out::println);
+        } catch (SQLException e) {
+            System.out.println("Could not retrieve items from database");
+        }
     }
-
-    public void updateFunction(Request req) {
-        
+    
+    @Override
+    public String toString() {
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        return String.format("Standup:\nSprint Id = %d\nNotes = %s\nDate = %s", sprintId, note, dateFormat.format(date));
     }
 
 }

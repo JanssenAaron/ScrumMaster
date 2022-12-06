@@ -1,5 +1,6 @@
 
 package scrummaster.dataclasses;
+import java.sql.Date;
 import java.util.Scanner;
 
 import scrummaster.enums.*;
@@ -36,13 +37,25 @@ public class ScrumMasterCommand {
      public int getInt(){
         Scanner scan = new Scanner(System.in);
         while(scan.hasNextInt()){
-            System.out.println("type a int");
+            System.out.println("Enter an int:");
             scan.next();
         }
-        return scan.nextInt();
+        int input = scan.nextInt();
+        scan.close();
+        return input;
      }
      public String getString(){
         Scanner scan = new Scanner(System.in);
-        return scan.next();
+        System.out.println("Enter a string:");
+        String input = scan.next();
+        scan.close();
+        return input;
+     }
+     public Date readDate() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter a Date (yyyy-mm-dd):");
+        String input = scan.next();
+        scan.close();
+        return Date.valueOf(input);
      }
 }
