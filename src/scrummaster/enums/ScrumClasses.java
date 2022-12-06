@@ -1,5 +1,6 @@
 package scrummaster.enums;
 
+import java.util.EnumSet;
 import java.util.Scanner;
 import scrummaster.dataclasses.*;
 /**
@@ -24,22 +25,44 @@ public enum ScrumClasses {
     }
     
     public void excute(Request req){
-        hold.excuteCommandFuncation(hold , req);
+        req.callMethod(req, hold);
+        // hold.excuteCommandFuncation(hold , req);
     }
     public static ScrumClasses scrumClassesRequest() {
-        boolean run  = true; 
-        ScrumClasses value = INVALID; 
+        commands();
         Scanner scan = new Scanner(System.in);
-        while(run) {
-            try {
-                value =  ScrumClasses.valueOf(scan.nextLine().toUpperCase());
-                run = false;
-            } catch (Exception e) {
-                value = INVALID;
-            }
+        boolean run = true;
+        ScrumClasses scrum = INVALID;
+        while(run){
+            try{
+                String hold = scan.nextLine();
+                scrum = valueOf(hold.toUpperCase());
+                run = false; 
+            }   
+            catch(Exception e){
+                System.out.println("do");
+            }       
         }
-        scan.close();
-        return value; 
+        return scrum ;
 
     }
+    public static  void commands() {
+        EnumSet.allOf(ScrumClasses.class).forEach(action -> System.out.println(action));
+    }
 }
+// boolean run  = true; 
+// ScrumClasses value = INVALID; 
+// Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+// System.out.println("Enter username");
+// commands();
+// while(run) {
+//     try {
+//         System.out.print(myObj);
+//         value =  ScrumClasses.valueOf("".toUpperCase());
+//         run = false;
+//     } catch (Exception e) {
+//         System.out.println("not a valid input");
+//     }
+// }
+// myObj.close();
+// return value; 

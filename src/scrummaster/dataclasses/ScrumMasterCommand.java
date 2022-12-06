@@ -6,9 +6,9 @@ import scrummaster.enums.*;
 
 public class ScrumMasterCommand {
 
-    public void excuteCommandFuncation(ScrumMasterCommand scrum,  Request req) {
-        req.callMethod(req, scrum);
-    }
+    // public void excuteCommandFuncation(ScrumMasterCommand scrum,  Request req) {
+    //     req.callMethod(req, scrum);
+    // }
     //this method should be used for get 1 element
     public void getFunction( Request req) {
         System.out.println("no support for get  hello ");
@@ -39,10 +39,12 @@ public class ScrumMasterCommand {
             System.out.println("type a int");
             scan.next();
         }
-        return scan.nextInt();
+        int hold = scan.nextInt();
+        return hold;
      }
-     public String getString(){
+     public String getString(){;
         Scanner scan = new Scanner(System.in);
-        return scan.next();
+        String send = scan.next();
+        return send;
      }
 }

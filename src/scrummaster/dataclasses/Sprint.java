@@ -29,7 +29,7 @@ public class Sprint extends ScrumMasterCommand {
         this.projectId = projectID;
     }
 
-    public Sprint findSprint( int tableId) {
+    public static Sprint findSprint( int tableId) {
         String selectEmployee = "select * from sprint"
                 + " where id = ?";
         try {
@@ -45,8 +45,8 @@ public class Sprint extends ScrumMasterCommand {
         return null;
     }
 
-    // add sprint
-    public Sprint addSprint(java.sql.Time start, java.sql.Time end, String note, int proID) {
+    // ----------------------------------add sprint-----------------------------------------------------------------------------
+    public static Sprint addSprint(java.sql.Time start, java.sql.Time end, String note, int proID) {
         String insert = "INSERT INTO SPRINT" + " (start_date,end_date, notes, project_id) values" + " (?,?,?,?);";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);
@@ -68,7 +68,7 @@ public class Sprint extends ScrumMasterCommand {
         ArrayList<Sprint>  listSprint = selectAllSprint();
         listInput((Sprint[]) listSprint.toArray());
       }
-    public ArrayList<Sprint>  selectAllSprint(){
+    public static  ArrayList<Sprint>  selectAllSprint(){
         ArrayList<Sprint> sprintTable = new ArrayList<>();
         String selectItem = "select * from sprint";
         try{
@@ -86,9 +86,9 @@ public class Sprint extends ScrumMasterCommand {
     }
     ///----------------------------delete----------------------------------------
     public void deleteFunction( Request req) {
-        deleteSprintById();
+        deleteSprintById(1);
     }
-    private Sprint  deleteSprintById(){
+    private static Sprint  deleteSprintById(int id ){
         String selectItem = "DELETE FROM sprint WHERE sprint_id = ?;";
         try{
             PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);

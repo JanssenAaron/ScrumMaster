@@ -33,6 +33,7 @@ public class Project extends ScrumMasterCommand {
             findProjectById( getInt()).toString();
         else if("scrum_id".equalsIgnoreCase(scan.next()))
             findByScrumTeamId( getInt()).toString();
+        scan.close();
         
     }
     public ScrumTeam findProjectById( int tableId) {

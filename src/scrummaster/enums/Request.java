@@ -1,5 +1,6 @@
 package scrummaster.enums;
 
+import java.util.EnumSet;
 import java.util.Scanner;
 import scrummaster.dataclasses.ScrumMasterCommand;
 
@@ -17,22 +18,21 @@ public enum Request {
     INVALID;
 
     public static Request setRequest() {
-        boolean run  = true; 
-        Request value = INVALID; 
+        commands();
         Scanner scan = new Scanner(System.in);
-        while(run) {
-
+        boolean run = true;
+        Request scrum = INVALID;
+        while(run){
             try{
-              value = Request.valueOf(scan.nextLine().toUpperCase());
-              run = false;
-            }
+                String hold = scan.nextLine();
+                scrum = valueOf(hold.toUpperCase());
+                run = false; 
+            }   
             catch(Exception e){
-              value = INVALID; 
-            }
+                System.out.println("do");
+            }       
         }
-        scan.close();
-        return value; 
-
+        return scrum ;
     }
 
     // ask brandon
@@ -50,5 +50,8 @@ public enum Request {
             scrum.updateFunction(req);
         else if (req == Request.INSERT) 
            scrum.insertFunction(req);
+    }
+    public static  void commands() {
+        EnumSet.allOf(Request.class).forEach(action -> System.out.println(action));
     }
 }
