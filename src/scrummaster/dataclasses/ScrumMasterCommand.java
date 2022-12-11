@@ -64,6 +64,7 @@ public class ScrumMasterCommand {
         Scanner scan = new Scanner(System.in);
         System.out.print(prompt);
         while (!scan.hasNextInt()) {
+            System.out.println("Not a valid integer");
             System.out.print(prompt);
             scan.next();
         }
@@ -71,19 +72,27 @@ public class ScrumMasterCommand {
         return input;
     }
 
-    public String getString() {
+    public String getString(String prompt) {
         ;
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter a string:");
+        System.out.print(prompt);
         String input = scan.nextLine();
         return input;
     }
 
-    public Date readDate() {
+    public Date readDate(String prompt) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter a Date (yyyy-mm-dd):");
-        String input = scan.next();
-        return Date.valueOf(input);
+        System.out.print(prompt);
+        while (true) {
+            try {
+                String input = scan.nextLine();
+                return Date.valueOf(input);
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Not a valid date");
+                System.out.print(prompt);
+            }
+        }
+        
     }
 
     public void mergeLinkedList(LinkedList<Integer> mergeTo, LinkedList<Integer> merge) {

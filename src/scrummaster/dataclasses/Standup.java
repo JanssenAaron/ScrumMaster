@@ -104,7 +104,7 @@ public class Standup extends ScrumMasterCommand {
     }
 
     public void insertFunction(Request req) {
-        Standup st = new Standup(getString(), readDate(), getInt());
+        Standup st = new Standup(getString("Enter note: "), readDate("Enter date: "), getInt("Enter sprint id: "));
         try {
             saveStandups(st);
         } catch (SQLException e) {
@@ -114,7 +114,7 @@ public class Standup extends ScrumMasterCommand {
 
     public void deleteFunction(Request req) {
         try {
-            int num = delete(getInt(), readDate());
+            int num = delete(getInt("Enter sprint id: "), readDate("Enter date: "));
             System.out.printf("Deleted %d entries from standup table\n", num);
         } catch (SQLException e) {
             System.out.println("Could not delete from the database");
@@ -123,7 +123,7 @@ public class Standup extends ScrumMasterCommand {
 
     public void getFunction(Request req) {
         try {
-            ArrayList<Standup> sts = findBySprintId(getInt());
+            ArrayList<Standup> sts = findBySprintId(getInt("Enter sprint id: "));
             sts.forEach(System.out::println);
         } catch (SQLException e) {
             System.out.println("Could not retrieve items from database");

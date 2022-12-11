@@ -165,14 +165,14 @@ public class UserStory extends ScrumMasterCommand {
             System.out.println("Find by:\n(0) User Story Id\n(1) Project Id");
             int choice;
             do {
-                choice = getInt();
+                choice = getInt("Find by:\n(0) User Story Id\n(1) Project Id\n");
             } while (choice != 0 && choice != 1);
             switch (choice) {
                 case 0:
-                    System.out.println(findById(getInt()));
+                    System.out.println(findById(getInt("Enter user story id: ")));
                     break;
                 case 1:
-                    findByProjectId(getInt()).forEach(System.out::println);
+                    findByProjectId(getInt("Enter project id: ")).forEach(System.out::println);
                     break;
             }
         } catch (SQLException e) {
@@ -190,7 +190,14 @@ public class UserStory extends ScrumMasterCommand {
 
     public void insertFunction(Request req) {
         try {
-            UserStory us = new UserStory(getInt(), getInt(), getString(), readDate(), readDate(), getInt());
+            UserStory us = new UserStory(
+                    getInt("Enter id: "),
+                    getInt("Enter priority: "),
+                    getString("Enter description: "),
+                    readDate("Enter start date: "), 
+                    readDate("Enter estimated end date: "),
+                    getInt("Enter project id: ")
+            );
             int num = saveUserStories(us);
             System.out.printf("Saved %d entities in the database\n", num);
         } catch (SQLException e) {

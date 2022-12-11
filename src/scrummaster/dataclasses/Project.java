@@ -34,9 +34,9 @@ public class Project extends ScrumMasterCommand {
         System.out.println("options: find scrum team 'project_id' or 'scrum_id'  ");
         String command = scan.next();
         if ("project_id".equalsIgnoreCase(command)) 
-            System.out.println(findProjectById( getInt()));
+            System.out.println(findProjectById( getInt("Enter project id: ")));
         else if("scrum_id".equalsIgnoreCase(command))
-            findByScrumTeamId( getInt()).toString();        
+            findByScrumTeamId( getInt("Enter scrum team id: ")).toString();        
     }
     public Project findProjectById( int tableId) {
         String selectEmployee = "select * from project where project_id = ?;";
@@ -69,7 +69,7 @@ public class Project extends ScrumMasterCommand {
     
     //-----------------------------------create-----------------------------------------------------------
     public void insertFunction( Request req) {
-        createProject(getInt(), getString() );
+        createProject(getInt("Enter scrum team id: "), getString("Enter summary: ") );
     }
     public Project createProject(int scrum_Id, String summarys){
         //int scrumId, String summary

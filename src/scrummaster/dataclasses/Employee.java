@@ -166,10 +166,10 @@ public class Employee extends ScrumMasterCommand {
 
     public void insertFunction(Request req) {
         // int id = getInt();
-        String fName = getString();
-        String lName = getString();
-        int ra = getInt();
-        int devID = getInt();
+        String fName = getString("Enter first name: ");
+        String lName = getString("Enter last name: ");
+        int ra = getInt("Enter role assignment number: ");
+        int devID = getInt("Enter dev team id: ");
         try {
 
             PreparedStatement ps = DBConnection.CONNECTION.prepareStatement(
