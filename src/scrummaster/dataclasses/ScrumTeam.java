@@ -22,8 +22,7 @@ public class ScrumTeam extends ScrumMasterCommand {
 
     // ----------------------get-----------------
     public void getFunction(Request req) {
-        System.out.println("get the id for Scrum Team");
-        findSprint(getInt()).toString();
+        findSprint(getInt("Enter id: ")).toString();
     }
 
     public ScrumTeam findSprint(int tableId) {

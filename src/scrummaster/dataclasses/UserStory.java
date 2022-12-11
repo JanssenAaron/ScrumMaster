@@ -11,7 +11,7 @@ import scrummaster.DBConnection;
 import scrummaster.enums.Request;
 
 public class UserStory extends ScrumMasterCommand {
-    
+
     private int id;
     private int priority;
     private String description;
@@ -82,8 +82,8 @@ public class UserStory extends ScrumMasterCommand {
 
     public static UserStory findById(int id) throws SQLException {
         PreparedStatement pstmt = DBConnection.CONNECTION
-                .prepareStatement("select * from user_story where id = ?");
-        pstmt.setInt(0, id);
+                .prepareStatement("select * from user_story where story_id = ?");
+        pstmt.setInt(1, id);
         ResultSet results = pstmt.executeQuery();
         if (results.next()) {
             UserStory us = new UserStory();
@@ -101,7 +101,7 @@ public class UserStory extends ScrumMasterCommand {
     public static ArrayList<UserStory> findByProjectId(int id) throws SQLException {
         PreparedStatement pstmt = DBConnection.CONNECTION
                 .prepareStatement("select * from user_story where project_id = ?");
-        pstmt.setInt(0, id);
+        pstmt.setInt(1, id);
         ResultSet results = pstmt.executeQuery();
         ArrayList<UserStory> stories = new ArrayList<>();
         while (results.next()) {
@@ -137,16 +137,17 @@ public class UserStory extends ScrumMasterCommand {
 
     public static int saveUserStories(UserStory... stories) throws SQLException {
         PreparedStatement pstmt = DBConnection.CONNECTION
-                .prepareStatement("insert into user_story (story_id, priority, description, completed_date, time_estimate, project_id) values (?, ?, ?, ?, ?, ?)");
+                .prepareStatement(
+                        "insert into user_story (story_id, priority, description, completed_date, time_estimate, project_id) values (?, ?, ?, ?, ?, ?)");
         int count = 0;
         for (int i = 0; i < stories.length; i++) {
             UserStory story = stories[i];
-            pstmt.setInt(0, story.getId());
-            pstmt.setInt(1, story.getPriority());
-            pstmt.setString(2, story.getDescription());
-            pstmt.setDate(3, story.getCompletedDate());
-            pstmt.setDate(4, story.getTimeEstimate());
-            pstmt.setInt(5, story.getProjectId());
+            pstmt.setInt(1, story.getId());
+            pstmt.setInt(2, story.getPriority());
+            pstmt.setString(3, story.getDescription());
+            pstmt.setDate(4, story.getCompletedDate());
+            pstmt.setDate(5, story.getTimeEstimate());
+            pstmt.setInt(6, story.getProjectId());
             count += pstmt.executeUpdate();
         }
         return count;
@@ -164,14 +165,14 @@ public class UserStory extends ScrumMasterCommand {
             System.out.println("Find by:\n(0) User Story Id\n(1) Project Id");
             int choice;
             do {
-                choice = getInt();
+                choice = getInt("Find by:\n(0) User Story Id\n(1) Project Id\n");
             } while (choice != 0 && choice != 1);
             switch (choice) {
                 case 0:
-                    System.out.println(findById(getInt()));
+                    System.out.println(findById(getInt("Enter user story id: ")));
                     break;
                 case 1:
-                    findByProjectId(getInt()).forEach(System.out::println);
+                    findByProjectId(getInt("Enter project id: ")).forEach(System.out::println);
                     break;
             }
         } catch (SQLException e) {
@@ -189,7 +190,14 @@ public class UserStory extends ScrumMasterCommand {
 
     public void insertFunction(Request req) {
         try {
-            UserStory us = new UserStory(getInt(), getInt(), getString(), readDate(), readDate(), getInt());
+            UserStory us = new UserStory(
+                    getInt("Enter id: "),
+                    getInt("Enter priority: "),
+                    getString("Enter description: "),
+                    readDate("Enter start date: "), 
+                    readDate("Enter estimated end date: "),
+                    getInt("Enter project id: ")
+            );
             int num = saveUserStories(us);
             System.out.printf("Saved %d entities in the database\n", num);
         } catch (SQLException e) {
@@ -210,7 +218,8 @@ public class UserStory extends ScrumMasterCommand {
         DateFormat dateFormat = DateFormat.getDateInstance();
         String completedString = completedDate == null ? "" : dateFormat.format(completedDate);
         String estimateString = dateFormat.format(timeEstimate);
-        return String.format("User Story:\nId = %d\nPriority = %d\nDescription = %s\nDate Completed = %s\nEstimated Completion = %s\nProject Id = %d",
+        return String.format(
+                "User Story:\nId = %d\nPriority = %d\nDescription = %s\nDate Completed = %s\nEstimated Completion = %s\nProject Id = %d",
                 id, priority, description, completedString, estimateString, projectId);
     }
 
