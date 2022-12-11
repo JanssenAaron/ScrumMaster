@@ -74,7 +74,7 @@ public class ScrumMasterCommand {
 
     public String getString(String prompt) {
         Scanner scan = new Scanner(System.in);
-        System.out.print("Enter a string:");
+        System.out.print(prompt);
         String input = scan.nextLine();
         return input;
     }
@@ -91,7 +91,7 @@ public class ScrumMasterCommand {
                 System.out.print(prompt);
             }
         }
-        
+
     }
 
     public void mergeLinkedList(LinkedList<Integer> mergeTo, LinkedList<Integer> merge) {
