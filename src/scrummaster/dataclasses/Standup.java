@@ -95,10 +95,11 @@ public class Standup extends ScrumMasterCommand {
         return count;
     }
 
-    public static int deleteById(int id) throws SQLException {
+    public static int delete(int sprintId, Date date) throws SQLException {
         PreparedStatement pstmt = DBConnection.CONNECTION
-                .prepareStatement("delete from standup where id = ?");
-        pstmt.setInt(0, id);
+                .prepareStatement("delete from standup where sprint_id = ? and date_of_standup = ?");
+        pstmt.setInt(0, sprintId);
+        pstmt.setDate(1, date);
         return pstmt.executeUpdate();
     }
 
@@ -113,7 +114,7 @@ public class Standup extends ScrumMasterCommand {
 
     public void deleteFunction(Request req) {
         try {
-            int num = deleteById(getInt());
+            int num = delete(getInt(), getDate());
             System.out.printf("Deleted %d entries from standup table\n", num);
         } catch (SQLException e) {
             System.out.println("Could not delete from the database");
