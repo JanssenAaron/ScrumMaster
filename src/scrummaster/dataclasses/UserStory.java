@@ -182,7 +182,7 @@ public class UserStory extends ScrumMasterCommand {
 
     public void deleteFunction(Request req) {
         try {
-            System.out.printf("Deleted %d entries from the user story table\n", deleteById(getInt()));
+            System.out.printf("Deleted %d entries from the user story table\n", deleteById(getInt("Enter id: ")));
         } catch (SQLException e) {
             System.out.println("Could not delete items from database");
         }
@@ -194,10 +194,9 @@ public class UserStory extends ScrumMasterCommand {
                     getInt("Enter id: "),
                     getInt("Enter priority: "),
                     getString("Enter description: "),
-                    readDate("Enter start date: "), 
+                    readDate("Enter start date: "),
                     readDate("Enter estimated end date: "),
-                    getInt("Enter project id: ")
-            );
+                    getInt("Enter project id: "));
             int num = saveUserStories(us);
             System.out.printf("Saved %d entities in the database\n", num);
         } catch (SQLException e) {
