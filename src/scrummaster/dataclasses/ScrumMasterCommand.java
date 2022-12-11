@@ -1,5 +1,6 @@
 
 package scrummaster.dataclasses;
+
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,70 +23,82 @@ public class ScrumMasterCommand {
     protected String devTeamItemSprint = "DELETE FROM dev_team WHERE sprint_id = ?;";
     protected String devTeamItemScrumTeam = "DELETE FROM dev_team WHERE scrum_team_id = ";
 
-
     protected String sprintItem = "DELETE FROM sprint WHERE sprint_id = ?;";
     protected String projectItem = "DELETE FROM project WHERE sprint_id = ";
     protected String scrumTeamItem = "DELETE FROM scrum_team WHERE scrum_team_id = ?;";
-    // public void excuteCommandFuncation(ScrumMasterCommand scrum,  Request req) {
-    //     req.callMethod(req, scrum);
+
+    // public void excuteCommandFuncation(ScrumMasterCommand scrum, Request req) {
+    // req.callMethod(req, scrum);
     // }
-    //this method should be used for get 1 element
-    public void getFunction( Request req) {
+    // this method should be used for get 1 element
+    public void getFunction(Request req) {
         System.out.println("no support for get  hello ");
     }
-    //this method should be used for adding elements to the database
-    public void deleteFunction( Request req) {
+
+    // this method should be used for adding elements to the database
+    public void deleteFunction(Request req) {
         System.out.println("no support create function");
     }
-    //this method should be used for select all the element
-    public void insertFunction(Request req){
+
+    // this method should be used for select all the element
+    public void insertFunction(Request req) {
         System.out.println("no support create function");
     }
-     //this method should be used for select all the element
-     public void updateFunction(Request req){
-         System.out.println("no support create function");
+
+    // this method should be used for select all the element
+    public void updateFunction(Request req) {
+        System.out.println("no support create function");
     }
-    //this method should be used for select all the element
-     public void listFunction(Request req){
-       System.out.println("no support create function");
-     }
-     public void listInput(ScrumMasterCommand[] rows){
-              for (ScrumMasterCommand x: rows)
-                  x.toString();
-     }
-     public int getInt(){
+
+    // this method should be used for select all the element
+    public void listFunction(Request req) {
+        System.out.println("no support create function");
+    }
+
+    public void listInput(ScrumMasterCommand[] rows) {
+        for (ScrumMasterCommand x : rows)
+            x.toString();
+    }
+
+    public int getInt(String prompt) {
         Scanner scan = new Scanner(System.in);
-        while(!scan.hasNextInt()){
-            System.out.println("Enter an int:");
+        System.out.print(prompt);
+        while (!scan.hasNextInt()) {
+            System.out.print(prompt);
             scan.next();
         }
         int input = scan.nextInt();
         return input;
-     }
-     public String getString(){;
+    }
+
+    public String getString() {
+        ;
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter a string:");
-        String input = scan.next();
+        String input = scan.nextLine();
         return input;
-     }
-     public Date readDate() {
+    }
+
+    public Date readDate() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter a Date (yyyy-mm-dd):");
         String input = scan.next();
         return Date.valueOf(input);
-     }
-     public void  mergeLinkedList(LinkedList<Integer> mergeTo, LinkedList<Integer> merge){
-        while(merge.size() != 0){
+    }
+
+    public void mergeLinkedList(LinkedList<Integer> mergeTo, LinkedList<Integer> merge) {
+        while (merge.size() != 0) {
             mergeTo.add(merge.removeFirst());
         }
-     }
-     public LinkedList getAllID(String scrum, LinkedList<Integer> scrumId) {
+    }
+
+    public LinkedList getAllID(String scrum, LinkedList<Integer> scrumId) {
         LinkedList list = new LinkedList<Integer>();
         try {
             while (scrumId.size() != 0) {
                 ResultSet rs = DBConnection.CONNECTION.prepareStatement(scrum + scrumId.removeFirst() + ";")
                         .executeQuery();
-                //list.add(rs.getInt(0));
+                // list.add(rs.getInt(0));
                 while (rs.next()) {
                     list.add(rs.getInt(0));
                 }
@@ -94,7 +107,7 @@ public class ScrumMasterCommand {
         } catch (SQLException e) {
             return list;
         }
-       // return list;
+        // return list;
     }
 
     public void deleteAllID(String scrum, LinkedList scrumId) {
