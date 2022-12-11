@@ -10,7 +10,7 @@ import scrummaster.DBConnection;
 import scrummaster.enums.*;
 
 public class ScrumMasterCommand {
-    protected String linkingSprintBacklogItemSprint = "DELETE FROM linking_sprint_backlog WHERE sprint_id  =";
+    protected static String linkingSprintBacklogItemSprint = "DELETE FROM linking_sprint_backlog WHERE sprint_id  =";
     protected String linkingSprintBacklogItemStory = "DELETE FROM linking_sprint_backlog WHERE story_id  =";
 
     protected String userStoryItem = "DELETE FROM user_story  WHERE project_id = ";
