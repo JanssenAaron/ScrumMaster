@@ -13,15 +13,6 @@ import scrummaster.enums.ScrumClasses;
  */
 public class ScrumMaster {
 
-    /**
-     * @param args the command line arguments
-     *             ScrumClasses requestClass = ScrumClasses.scrumClassesRequest();
-            if (requestClass != ScrumClasses.INVALID) {
-                requestData(requestClass);
-            } else{
-                System.out.println("sorry the command was not right");
-            }
-     */
     public static void main(String[] args) {
         boolean run = true;
         Scanner scan = new Scanner(System.in);

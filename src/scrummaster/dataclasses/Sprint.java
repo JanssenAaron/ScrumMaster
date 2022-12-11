@@ -91,6 +91,8 @@ public class Sprint extends ScrumMasterCommand {
     private static Sprint  deleteSprintById(int id ){
         String selectItem = "DELETE FROM sprint WHERE sprint_id = ?;";
         try{
+            DBConnection.CONNECTION.prepareStatement(linkingSprintBacklogItemSprint).executeQuery();
+            DBConnection.CONNECTION.prepareStatement("update dev_team set sprint_id = null where sprint_id = " + id ).executeQuery();
             PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
             rs.setInt(id, 1);
             ResultSet rsSprint = rs.executeQuery();

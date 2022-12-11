@@ -90,16 +90,14 @@ public class Project extends ScrumMasterCommand {
     //------------------delete-------------------------
     public void deleteFunction( Request req) {
         System.out.println("place an id to delete");
-        deleteProject(getId()).toString();
+        deleteProject(getId());
     }
-    public Project deleteProject(int pID){
+    public void deleteProject(int pID){
         LinkedList  projectAllID = new LinkedList<Integer>();
         projectAllID.add(pID);
         LinkedList sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
-        LinkedList devteamAllID = getAllID("select dev_team_id FROM sprint WHERE scrum_team_id = ", scrumAllID );
-        mergeLinkedList( devteamAllID, getAllID("select dev_team_id FROM sprint WHERE sprint_id = ", sprintAllID ) );
-                    //employee id must be changed so we must talk about 
-        LinkedList employeeID = getAllID("select employee_id FROM sprint WHERE dev_team_id = ", devteamAllID);
+        
+        deleteAllID("update dev_team set sprint_id = null where sprint_id = ", sprintAllID);
         
         LinkedList userStoryyID = getAllID("select user_story FROM sprint WHERE story_id = ", projectAllID);
 
@@ -111,14 +109,9 @@ public class Project extends ScrumMasterCommand {
 
         deleteAllID(scrumMasterItemScrumTeam, projectAllID);
 
-        deleteAllID(devTeamItemScrumTeam, scrumAllID);
-        deleteAllID(devTeamItemSprint, sprintAllID);
-
         deleteAllID(sprintItem, projectAllID);
 
-        deleteAllID(projectItem, scrumAllID);
-
-        deleteAllID(scrumTeamItem, scrumAllID);
+        deleteAllID(projectItem, projectAllID);
     }
 
     /**
