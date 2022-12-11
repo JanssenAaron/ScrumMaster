@@ -24,25 +24,24 @@ public class ScrumMaster {
      */
     public static void main(String[] args) {
         boolean run = true;
-        
+        Scanner scan = new Scanner(System.in);
         while (run) {
             ScrumClasses requestClass = ScrumClasses.scrumClassesRequest();
-        
-
-
-            Scanner scan = new Scanner(System.in);
-            System.out.println("enter an integer");
+            while(run){
+              Request req = Request.setRequest();
+              requestClass.excute(req);
+              System.out.println(  "would you like to request something else say yes to keep going or anything else to go back ");
+              String hold = scan.next();
+              run = "yes".equals(hold);
+            }
+            
             System.out.println(  "would you like to request something else say yes to keep going or anything else to stop ");
-            String hold = scan.nextLine();
-            System.out.println(hold);
+            String hold = scan.next();
             run = "yes".equals(hold);
-            scan.close();
+            
         }
-        try{
-        DBConnection.CONNECTION.close();
-        }
-        catch(Exception e ){
-        }
+        scan.close();
+
     }
    
     /*

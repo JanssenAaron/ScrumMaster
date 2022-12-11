@@ -1,6 +1,7 @@
 package scrummaster.dataclasses;
 
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import scrummaster.DBConnection;
@@ -24,34 +25,36 @@ public class Project extends ScrumMasterCommand {
     
     public Project() {
     }
+    public void listFunction(Request req){
+        
+      }
     //--------------------------------------get--------------------------------------------
     public void getFunction( Request req) {
         Scanner scan = new Scanner(System.in);
         System.out.println("options: find scrum team 'project_id' or 'scrum_id'  ");
-        System.out.println(scan.next());
-        if ("project_id".equalsIgnoreCase(scan.next())) 
-            findProjectById( getInt()).toString();
-        else if("scrum_id".equalsIgnoreCase(scan.next()))
-            findByScrumTeamId( getInt()).toString();
-        scan.close();
-        
+        String command = scan.next();
+        if ("project_id".equalsIgnoreCase(command)) 
+            System.out.println(findProjectById( getInt()));
+        else if("scrum_id".equalsIgnoreCase(command))
+            findByScrumTeamId( getInt()).toString();        
     }
-    public ScrumTeam findProjectById( int tableId) {
-        String selectEmployee = "select * from project"
-                + " where id = ?";
+    public Project findProjectById( int tableId) {
+        String selectEmployee = "select * from project where project_id = ?;";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
-            return new ScrumTeam(rsscrumteam.getInt("employee_id"));
+            rsscrumteam.next();
+            return new Project(rsscrumteam.getInt("project_id"), rsscrumteam.getInt("scrum_team_id"), rsscrumteam.getString("description"));
         } catch (SQLException e) {
+            System.out.println(e);
             return null;
         }
     }
     
     public ScrumTeam findByScrumTeamId( int tableId) {
         String selectEmployee = "select * from project"
-                + " inner join scrum_team "
+                + " inner join scrum_team on "
                 + "scrum_id.scrum_team_id = project.scrum_team_id"
                 + "where project.scrum_team_id = ?";
         try {
@@ -90,19 +93,32 @@ public class Project extends ScrumMasterCommand {
         deleteProject(getId()).toString();
     }
     public Project deleteProject(int pID){
-        String selectItem = "DELETE FROM project WHERE sprint_id = ?;";
-        try{
-            PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
-            rs.setInt(pID, 1);
-            ResultSet rsSprint = rs.executeQuery();
-            return new Project(rsSprint.getInt("project_id"), rsSprint.getInt("scrum_team_id"),
-             rsSprint.getNString("description"));
-   
-        }
-        catch(SQLException e){
-            System.out.println(e);
-        }
-        return null;
+        LinkedList  projectAllID = new LinkedList<Integer>();
+        projectAllID.add(pID);
+        LinkedList sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
+        LinkedList devteamAllID = getAllID("select dev_team_id FROM sprint WHERE scrum_team_id = ", scrumAllID );
+        mergeLinkedList( devteamAllID, getAllID("select dev_team_id FROM sprint WHERE sprint_id = ", sprintAllID ) );
+                    //employee id must be changed so we must talk about 
+        LinkedList employeeID = getAllID("select employee_id FROM sprint WHERE dev_team_id = ", devteamAllID);
+        
+        LinkedList userStoryyID = getAllID("select user_story FROM sprint WHERE story_id = ", projectAllID);
+
+        deleteAllID(linkingSprintBacklogItemStory, userStoryyID);
+        deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
+
+        deleteAllID(userStoryItem, projectAllID);
+        deleteAllID(standupSprintItem, sprintAllID);
+
+        deleteAllID(scrumMasterItemScrumTeam, projectAllID);
+
+        deleteAllID(devTeamItemScrumTeam, scrumAllID);
+        deleteAllID(devTeamItemSprint, sprintAllID);
+
+        deleteAllID(sprintItem, projectAllID);
+
+        deleteAllID(projectItem, scrumAllID);
+
+        deleteAllID(scrumTeamItem, scrumAllID);
     }
 
     /**
@@ -138,5 +154,8 @@ public class Project extends ScrumMasterCommand {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String toString(){//overriding the toString() method  
+        return id+ " "+ scrumTeamId+" "+ description;
+       }
     
 }

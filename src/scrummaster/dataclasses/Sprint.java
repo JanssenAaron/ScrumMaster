@@ -94,6 +94,7 @@ public class Sprint extends ScrumMasterCommand {
             PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
             rs.setInt(id, 1);
             ResultSet rsSprint = rs.executeQuery();
+            rsSprint.next();
             return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
             rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
    
