@@ -73,7 +73,7 @@ public class Project extends ScrumMasterCommand {
     }
     public Project createProject(int scrum_Id, String summarys){
         //int scrumId, String summary
-        String insert = "INSERT INTO SPRINT" + " (scrum_team_id, description ) values" + " (?,?);";
+        String insert = "INSERT INTO project" + " (scrum_team_id, description ) values" + " (?,?);";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);
             pstmt.setInt(1, scrum_Id);
@@ -81,7 +81,7 @@ public class Project extends ScrumMasterCommand {
 
             ResultSet rsSprint = pstmt.executeQuery();
             return new Project(rsSprint.getInt("project_id"), rsSprint.getInt("scrum_team_id"),
-             rsSprint.getNString("description"));
+             rsSprint.getString("description"));
         } catch (SQLException e) {
             System.out.println(e);
         }

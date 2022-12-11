@@ -1,7 +1,7 @@
 package scrummaster.dataclasses;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import scrummaster.DBConnection;
 import scrummaster.enums.Request;
@@ -65,17 +65,20 @@ public class Sprint extends ScrumMasterCommand {
     }
     //select all 
     public void listFunction(Request req){
-        ArrayList<Sprint>  listSprint = selectAllSprint();
+        LinkedList<Sprint>  listSprint = selectAllSprint();
+        while(listSprint.size() != 0 ){
+             System.out.println(listSprint.removeFirst());
+        }
         listInput((Sprint[]) listSprint.toArray());
       }
-    public static  ArrayList<Sprint>  selectAllSprint(){
-        ArrayList<Sprint> sprintTable = new ArrayList<>();
+    public static LinkedList<Sprint>  selectAllSprint(){
+        LinkedList<Sprint> sprintTable = new LinkedList<>();
         String selectItem = "select * from sprint";
         try{
             ResultSet rsSprint = DBConnection.CONNECTION.prepareStatement(selectItem).executeQuery();
             while(rsSprint.next()){
                 sprintTable.add(new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-                rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id")));
+                rsSprint.getTime("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id")));
             }
 
         }
@@ -177,5 +180,7 @@ public class Sprint extends ScrumMasterCommand {
     public void setId(int id) {
         this.id = id;
     }
-
+    public String toString(){//overriding the toString() method  
+        return id+ " "+ startDate+" "+ endDate + " " + notes + " " +projectId;
+       }
 }
