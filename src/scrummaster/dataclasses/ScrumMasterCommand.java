@@ -73,9 +73,8 @@ public class ScrumMasterCommand {
     }
 
     public String getString(String prompt) {
-        ;
         Scanner scan = new Scanner(System.in);
-        System.out.print(prompt);
+        System.out.print("Enter a string:");
         String input = scan.nextLine();
         return input;
     }
