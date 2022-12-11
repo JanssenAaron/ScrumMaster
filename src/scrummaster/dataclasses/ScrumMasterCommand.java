@@ -71,10 +71,10 @@ public class ScrumMasterCommand {
         return input;
     }
 
-    public String getString() {
+    public String getString(String prompt) {
         ;
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter a string:");
+        System.out.println(prompt);
         String input = scan.nextLine();
         return input;
     }
