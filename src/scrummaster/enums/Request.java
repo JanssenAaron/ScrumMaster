@@ -14,7 +14,6 @@ public enum Request {
     GET,
     INSERT,
     DELETE,
-    UPDATE,
     INVALID;
 
     public static Request setRequest() {
@@ -22,17 +21,16 @@ public enum Request {
         Scanner scan = new Scanner(System.in);
         boolean run = true;
         Request scrum = INVALID;
-        while(run){
-            try{
+        while (run) {
+            try {
                 String hold = scan.nextLine();
                 scrum = valueOf(hold.toUpperCase());
-                run = false; 
-            }   
-            catch(Exception e){
+                run = false;
+            } catch (Exception e) {
                 System.out.println("do");
-            }       
+            }
         }
-        return scrum ;
+        return scrum;
     }
 
     // ask brandon
@@ -46,12 +44,11 @@ public enum Request {
             scrum.deleteFunction(req);
         else if (req == Request.LS)
             scrum.listFunction(req);
-        else if (req == Request.UPDATE)
-            scrum.updateFunction(req);
-        else if (req == Request.INSERT) 
-           scrum.insertFunction(req);
+        else if (req == Request.INSERT)
+            scrum.insertFunction(req);
     }
-    public static  void commands() {
+
+    public static void commands() {
         EnumSet.allOf(Request.class).forEach(action -> System.out.println(action));
     }
 }

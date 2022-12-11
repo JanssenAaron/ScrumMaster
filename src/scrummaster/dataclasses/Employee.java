@@ -73,13 +73,11 @@ public class Employee extends ScrumMasterCommand {
 
         PreparedStatement ps = con.prepareStatement("SELECT * FROM employee WHERE employee_id = ?");
 
-        ps.setInt(0, id);
+        ps.setInt(1, id);
 
         ResultSet rs = ps.executeQuery();
+        rs.next();
 
-        if (!rs.first()) {
-            return null;
-        }
         int eId = rs.getInt("employee_id");
         String firstName = rs.getString("first_name");
         String lastName = rs.getString("last_name");
@@ -137,6 +135,15 @@ public class Employee extends ScrumMasterCommand {
             System.out.println(emp);
         }
 
+    }
+
+    public void getFunction(Request req) {
+        try {
+            Employee e = findByID(getInt("Enter employee ID:"));
+            System.out.println(e);
+        } catch (SQLException sqlE) {
+            System.out.println(sqlE.getMessage());
+        }
     }
 
     public void deleteFunction(Request req) {
