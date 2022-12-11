@@ -3,14 +3,17 @@ package scrummaster.dataclasses;
 import java.util.ArrayList;
 import java.sql.*;
 import scrummaster.DBConnection;
+import scrummaster.enums.Request;
 
 public class DevTeam extends ScrumMasterCommand {
     // TODO Aaron
     private int id;
     private int scrumTeamId;
     private int sprintId;
+
     public DevTeam() {
     }
+
     public DevTeam(int id, int scrumTeamId, int sprintId) {
         this.id = id;
         this.scrumTeamId = scrumTeamId;
@@ -46,7 +49,7 @@ public class DevTeam extends ScrumMasterCommand {
 
         PreparedStatement ps = con.prepareStatement("SELECT * FROM dev_team WHERE dev_team_id = ?");
 
-        ps.setInt(0, id);
+        ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (!rs.first()) {
             return null;
@@ -109,5 +112,50 @@ public class DevTeam extends ScrumMasterCommand {
             count++;
         }
         return count;
+    }
+
+    public void insertFunction(Request req) {
+
+        try {
+            PreparedStatement ps = DBConnection.CONNECTION.prepareStatement(
+                    "INSERT INTO dev_team (scrum_team_id, sprint_id) VALUES (?, ?)");
+
+            ps.setInt(1, getInt("Enter scrum team id:"));
+            ps.setInt(2, getInt("Enter sprint id:"));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void deleteFunction(Request req) {
+        try {
+            PreparedStatement psEmp = DBConnection.CONNECTION
+                    .prepareStatement("UPDATE employee SET dev_team_id = NULL WHERE dev_team_id = ?");
+            int id = getInt("Enter dev team id:");
+            psEmp.setInt(1, id);
+            psEmp.executeUpdate();
+
+            PreparedStatement ps = DBConnection.CONNECTION
+                    .prepareStatement("DELETE FROM dev_team WHERE dev_team_id = ?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void listFunction(Request req) {
+        try {
+            PreparedStatement ps = DBConnection.CONNECTION.prepareStatement("SELECT * FROM dev_team");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                System.out.println("Dev Team ID: " + rs.getInt("dev_team_id"));
+                System.out.println("Scrum Team ID: " + rs.getInt("scrum_team_id"));
+                System.out.println("Sprint ID: " + rs.getInt("sprint_id"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
