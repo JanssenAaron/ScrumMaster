@@ -63,7 +63,7 @@ public class EmployeeRole extends ScrumMasterCommand {
     }
 
     public void insertFunction(Request req) {
-        String role = getString("Enter a role description");
+        String role = getString("Enter a role description: ");
         try {
             PreparedStatement ps = DBConnection.CONNECTION
                     .prepareStatement("INSERT INTO employee_role(role_desc) VALUES (?)");
@@ -77,10 +77,10 @@ public class EmployeeRole extends ScrumMasterCommand {
     public void listFunction(Request req) {
         try {
             PreparedStatement ps = DBConnection.CONNECTION
-                    .prepareStatement("SELECT role_desc FROM employee_role");
+                    .prepareStatement("SELECT * FROM employee_role");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                System.out.println("Role description: " + rs.getString(1));
+                System.out.println("ID: " + rs.getInt(1) + "+Role description: " + rs.getString(2));
             }
         } catch (SQLException sqlE) {
             System.out.println(sqlE.getMessage());

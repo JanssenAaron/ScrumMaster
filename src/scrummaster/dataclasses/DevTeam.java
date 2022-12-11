@@ -145,6 +145,22 @@ public class DevTeam extends ScrumMasterCommand {
         }
     }
 
+    public void getFunction(Request req) {
+        try {
+            PreparedStatement ps = DBConnection.CONNECTION
+                    .prepareStatement("SELECT * FROM dev_team WHERE dev_team_id = ?");
+            ps.setInt(1, getInt("Enter dev team id:"));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println("Dev Team ID: " + rs.getInt("dev_team_id"));
+                System.out.println("Scrum Team ID: " + rs.getInt("scrum_team_id"));
+                System.out.println("Sprint ID: " + rs.getInt("sprint_id"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
     public void listFunction(Request req) {
         try {
             PreparedStatement ps = DBConnection.CONNECTION.prepareStatement("SELECT * FROM dev_team");
