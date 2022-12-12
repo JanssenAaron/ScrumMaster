@@ -13,15 +13,15 @@ import scrummaster.enums.Request;
  */
 public class Sprint extends ScrumMasterCommand {
     private int id;
-    private java.sql.Time startDate;
-    private java.sql.Time endDate;
+    private java.sql.Date startDate;
+    private java.sql.Date endDate;
     private String notes;
     private int projectId;
 
     public Sprint() {
     }
 
-    public Sprint(int tableId, java.sql.Time startDataAndTime, java.sql.Time endDataAndTime, String text,
+    public Sprint(int tableId, java.sql.Date startDataAndTime, java.sql.Date endDataAndTime, String text,
             int projectID) {
         id = tableId;
         this.startDate = startDataAndTime;
@@ -42,8 +42,8 @@ public class Sprint extends ScrumMasterCommand {
             ResultSet rsSprint = pstmt.executeQuery();
             rsSprint.next();
             System.out.println(rsSprint.getDate("start_date"));
-            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-                    rsSprint.getTime("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id"));
+            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getDate("start_date"),
+                    rsSprint.getDate("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id"));
         } catch (SQLException e) {
            System.out.println(e);
         }
@@ -61,8 +61,8 @@ public class Sprint extends ScrumMasterCommand {
             pstmt.setInt(4, proID);
 
             ResultSet rsSprint = pstmt.executeQuery();
-            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-                    rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getDate("start_date"),
+                    rsSprint.getDate("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id"));
         } catch (SQLException e) {
 
         }
@@ -81,8 +81,8 @@ public class Sprint extends ScrumMasterCommand {
         try{
             ResultSet rsSprint = DBConnection.CONNECTION.prepareStatement(selectItem).executeQuery();
             while(rsSprint.next()){
-                sprintTable.add(new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-                rsSprint.getTime("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id")));
+                sprintTable.add(new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getDate("start_date"),
+                rsSprint.getDate("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id")));
             }
 
         }
@@ -124,28 +124,28 @@ public class Sprint extends ScrumMasterCommand {
     /**
      * @return the startDate
      */
-    public java.sql.Time getStartDate() {
+    public java.sql.Date getStartDate() {
         return startDate;
     }
 
     /**
      * @param startDate the startDate to set
      */
-    public void setStartDate(java.sql.Time startDate) {
+    public void setStartDate(java.sql.Date startDate) {
         this.startDate = startDate;
     }
 
     /**
      * @return the endDate
      */
-    public java.sql.Time getEndDate() {
+    public java.sql.Date getEndDate() {
         return endDate;
     }
 
     /**
      * @param endDate the endDate to set
      */
-    public void setEndDate(java.sql.Time endDate) {
+    public void setEndDate(java.sql.Date endDate) {
         this.endDate = endDate;
     }
 

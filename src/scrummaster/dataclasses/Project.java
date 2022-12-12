@@ -18,7 +18,8 @@ public class Project extends ScrumMasterCommand {
     private int scrumTeamId;
     private String description;
     private ScrumTeam scrumgroup;
-    
+    private Sprint joinSprint;
+     
     public Project(int tableId, int scrumId, String summary) {
         id = tableId;
         scrumTeamId = scrumId;
@@ -30,7 +31,13 @@ public class Project extends ScrumMasterCommand {
         description = summary;
         scrumgroup = scrum;
     }
-    
+    public Project(int tableId, int scrumId, String summary, Sprint joinSprint) {
+        id = tableId;
+        scrumTeamId = scrumId;
+        description = summary;
+        this.joinSprint = joinSprint;
+
+    }
     public Project() {
     }
     public void listFunction(Request req){
@@ -52,8 +59,12 @@ public class Project extends ScrumMasterCommand {
         String command = scan.next();
         if ("project_id".equalsIgnoreCase(command)) 
             System.out.println(findProjectById( getInt("Enter project id: ")));
-        else if("scrum_id".equalsIgnoreCase(command))
-            findByScrumTeamId( getInt("Enter scrum team id: ")).toString();        
+        else if("scrum_id".equalsIgnoreCase(command)){
+            LinkedList<Project> x = findByScrumTeamId( getInt("Enter scrum team id: "));
+                 while(x.size() != 0 )
+                    System.out.println(x.removeFirst() );
+        }
+                  
     }
     public Project findProjectById( int tableId) {
         String selectEmployee = "select * from project where project_id = ?;";
@@ -68,22 +79,27 @@ public class Project extends ScrumMasterCommand {
             return null;
         }
     }
-    
-    public Project findByScrumTeamId( int tableId) {
-        String selectEmployee = "select * from project"
-                + " inner join scrum_team on "
-                + "scrum_id.scrum_team_id = project.scrum_team_id"
-                + "where project.scrum_team_id = ?";
+    public static void main(String[] args){
+        Project x = new Project();
+        System.out.println(x.findByScrumTeamId(1));
+    }
+    public LinkedList<Project> findByScrumTeamId( int tableId) {
+        String selectEmployee = "select * from project inner join sprint on sprint.project_id = project.project_id  where project.project_id = ?;";
+        LinkedList<Project>  listProject = new LinkedList<>();
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
-            rsscrumteam.next();
-            return new Project(rsscrumteam.getInt("employee_id"), 
-            rsscrumteam.getInt("scrum_team_id"),rsscrumteam.getString("description"), 
-            new ScrumTeam(rsscrumteam.getInt("scrum_team_id") ) );
+            while(rsscrumteam.next())
+                listProject.add(new Project(rsscrumteam.getInt("project_id"), 
+                rsscrumteam.getInt("scrum_team_id"),rsscrumteam.getString("description"), 
+                 new Sprint(rsscrumteam.getInt("sprint_id"), rsscrumteam.getDate("start_date"),
+                rsscrumteam.getDate("end_date"), rsscrumteam.getString("notes"), rsscrumteam.getInt("project_id"))
+                ));
+            return listProject ;
             
         } catch (SQLException e) {
+            System.out.println(e);
             return null;
         }
         
@@ -114,10 +130,7 @@ public class Project extends ScrumMasterCommand {
 
         deleteProject(getInt("place an id to delete from project"));
     }
-    public static void main(String[] args){
-        Project x = new Project();
-        x.deleteProject(1);
-    }
+
     public void deleteProject(int pID){
         ArrayList<Integer> projectAllID = new ArrayList<Integer>();
         projectAllID.add(pID);
@@ -182,8 +195,8 @@ public class Project extends ScrumMasterCommand {
         this.description = description;
     }
     public String toString(){//overriding the toString() method  
-        if(scrumgroup != null)
-            return id+ " "+ scrumTeamId+" "+ description + scrumgroup;
+        if(joinSprint != null)
+            return id+ " "+ scrumTeamId+" "+ description + joinSprint;
         return id+ " "+ scrumTeamId+" "+ description;
        }
     

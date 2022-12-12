@@ -14,30 +14,36 @@ public class ScrumTeam extends ScrumMasterCommand {
      */
     private int id;
     private int scrum_master_id;
+    private Project joinProject; 
     public ScrumTeam() {
     }
 
     public ScrumTeam(int id) {
         this.id = id;
-        this.scrum_master_id = scrum_master_id; 
+    }
+    public ScrumTeam(Project id) {
+        joinProject = id; 
 
     }
 
     // ----------------------get-----------------
     public void getFunction(Request req) {
         System.out.println(findSprint(getInt("Enter id: ")));
-        ;
     }
 
-    public ScrumTeam findSprint(int tableId) {
-        String selectEmployee = "select * from scrum_team"
-                + " where scrum_team_id = ?";
+    public LinkedList<ScrumTeam> findSprint(int tableId) {
+        String selectEmployee = "select * from project inner join scrum_team on scrum_team.scrum_team_id = project.scrum_team_id where project.scrum_team_id = ?;";
+
+        LinkedList<ScrumTeam> scrumList = new LinkedList<>();
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
-            rsscrumteam.next();
-            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"));
+            while(rsscrumteam.next())
+                scrumList.add(new ScrumTeam(new Project(rsscrumteam.getInt("project_id"), rsscrumteam.getInt("scrum_team_id"),
+                rsscrumteam.getString("description"))));
+
+            return scrumList;
         } catch (SQLException e) {
             System.out.println(e);
             return null;
@@ -132,6 +138,8 @@ public class ScrumTeam extends ScrumMasterCommand {
     }
 
     public String toString() {// overriding the toString() method
+        if(joinProject != null)
+           return  joinProject + "";
         return " "+id + "  scrum master id:  " + scrum_master_id;
     }
 }
