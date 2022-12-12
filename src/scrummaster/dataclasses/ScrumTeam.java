@@ -17,7 +17,7 @@ public class ScrumTeam extends ScrumMasterCommand {
     public ScrumTeam() {
     }
 
-    public ScrumTeam(int id, int scrum_master_id) {
+    public ScrumTeam(int id) {
         this.id = id;
         this.scrum_master_id = scrum_master_id; 
 
@@ -37,22 +37,18 @@ public class ScrumTeam extends ScrumMasterCommand {
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
             rsscrumteam.next();
-            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"), rsscrumteam.getInt(2));
+            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"));
         } catch (SQLException e) {
             System.out.println(e);
             return null;
         }
     }
 
-    public static void main(String[] args) {
-        ScrumTeam x = new ScrumTeam();
-        // System.out.println(x.findSprint(1));
-        x.deleteScrumTeam(1);
-    }
+
 
     // -------------------------delete---------------------------------------
     public void deleteFunction(Request req) {
-        deleteScrumTeam(getInt("place the id you want to get rid of"));
+        deleteScrumTeam(getInt("place the id to delete from scrum team"));
     }
 
     public ScrumTeam deleteScrumTeam(int scID) {
@@ -109,7 +105,7 @@ public class ScrumTeam extends ScrumMasterCommand {
             pstmt.setInt(1, scID);
 
             ResultSet rsSprint = pstmt.executeQuery();
-            return new ScrumTeam(rsSprint.getInt("scrum_team_id") , rsSprint.getInt(2));
+            return new ScrumTeam(rsSprint.getInt("scrum_team_id") );
         } catch (SQLException e) {
             System.out.println(e);
         }

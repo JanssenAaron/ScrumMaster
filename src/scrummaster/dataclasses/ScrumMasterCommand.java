@@ -25,7 +25,9 @@ public class ScrumMasterCommand {
     protected String devTeamItemScrumTeam = "DELETE FROM dev_team WHERE scrum_team_id = ";
 
     protected String sprintItem = "DELETE FROM sprint WHERE project_id = ";
+    protected String sprintItemSprintId = "DELETE FROM sprint WHERE sprint_id = ";
     protected String projectItem = "DELETE FROM project WHERE scrum_team_id = ";
+    protected String projectItemProjectId = "DELETE FROM project WHERE scrum_team_id = ";
     protected String scrumTeamItem = "DELETE FROM scrum_team WHERE scrum_team_id = ";
 
     // public void excuteCommandFuncation(ScrumMasterCommand scrum, Request req) {

@@ -32,9 +32,6 @@ public class Sprint extends ScrumMasterCommand {
     public void getFunction(Request req) {
         System.out.println(findSprint(getInt("what sprind id do you want:")));
     }
-    public static void main(String[] args){
-        findSprint(1);
-    }
     public static Sprint findSprint( int tableId) {
         String selectEmployee = "select * from sprint"
                 + " where sprint_id = ?";
@@ -94,9 +91,14 @@ public class Sprint extends ScrumMasterCommand {
         }
         return sprintTable;
     }
+    
     ///----------------------------delete----------------------------------------
+    public static void main(String[] args){
+        Sprint x = new Sprint();
+        x.deleteSprintById(1);
+    }
     public void deleteFunction( Request req) {
-        deleteSprintById(1);
+        deleteSprintById(getInt("place an id to delete from sprint"));
     }
     private  Sprint  deleteSprintById(int sID ){
         ArrayList<Integer> sprintAllID = new ArrayList<Integer>();
@@ -113,6 +115,7 @@ public class Sprint extends ScrumMasterCommand {
         updateEmployee(devteamAllID);
 
         deleteAllID(devTeamItemSprint, sprintAllID);
+        deleteAllID(sprintItemSprintId, sprintAllID);
               ///look at the problem that certain key is not getting delete 
         return null;
     }

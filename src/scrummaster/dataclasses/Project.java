@@ -80,7 +80,8 @@ public class Project extends ScrumMasterCommand {
             ResultSet rsscrumteam = pstmt.executeQuery();
             rsscrumteam.next();
             return new Project(rsscrumteam.getInt("employee_id"), 
-            rsscrumteam.getInt("scrum_team_id"),rsscrumteam.getString("description"), new ScrumTeam(rsscrumteam.getInt("scrum_team_id") , rsscrumteam.getInt("scrum_master_id")) );
+            rsscrumteam.getInt("scrum_team_id"),rsscrumteam.getString("description"), 
+            new ScrumTeam(rsscrumteam.getInt("scrum_team_id") ) );
             
         } catch (SQLException e) {
             return null;
@@ -111,7 +112,11 @@ public class Project extends ScrumMasterCommand {
     //------------------delete-------------------------
     public void deleteFunction( Request req) {
 
-        deleteProject(getInt("place an id to delete"));
+        deleteProject(getInt("place an id to delete from project"));
+    }
+    public static void main(String[] args){
+        Project x = new Project();
+        x.deleteProject(1);
     }
     public void deleteProject(int pID){
         ArrayList<Integer> projectAllID = new ArrayList<Integer>();
@@ -138,7 +143,7 @@ public class Project extends ScrumMasterCommand {
 
         deleteAllID(sprintItem, projectAllID);
 
-        deleteAllID(projectItem, projectAllID);
+        deleteAllID(projectItemProjectId, projectAllID);
     }
     //get 
     
