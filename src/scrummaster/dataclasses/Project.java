@@ -52,6 +52,10 @@ public class Project extends ScrumMasterCommand {
             System.out.println(e);
         }
       }
+      public static void printList(LinkedList<Project> listProject){
+        while(listProject.size() != 0 )
+         System.out.println(listProject.removeFirst() );
+      }
     //--------------------------------------get--------------------------------------------
     public void getFunction( Request req) {
         Scanner scan = new Scanner(System.in);
@@ -60,9 +64,8 @@ public class Project extends ScrumMasterCommand {
         if ("project_id".equalsIgnoreCase(command)) 
             System.out.println(findProjectById( getInt("Enter project id: ")));
         else if("scrum_id".equalsIgnoreCase(command)){
-            LinkedList<Project> x = findByScrumTeamId( getInt("Enter scrum team id: "));
-                 while(x.size() != 0 )
-                    System.out.println(x.removeFirst() );
+             printList(findByScrumTeamId( getInt("Enter scrum team id: ")));
+       
         }
                   
     }
