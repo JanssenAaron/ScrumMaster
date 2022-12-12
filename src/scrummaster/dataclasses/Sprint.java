@@ -70,7 +70,6 @@ public class Sprint extends ScrumMasterCommand {
         while(listSprint.size() != 0 ){
              System.out.println(listSprint.removeFirst());
         }
-        listInput((Sprint[]) listSprint.toArray());
       }
     public static LinkedList<Sprint>  selectAllSprint(){
         LinkedList<Sprint> sprintTable = new LinkedList<>();
@@ -99,7 +98,6 @@ public class Sprint extends ScrumMasterCommand {
         ArrayList<Integer> devteamAllID = getAllID("select dev_team_id FROM dev_team WHERE sprint_id = ",sprintAllID);
 
         // employee id must be changed so we must talk about
-        ArrayList<Integer> employeeID = getAllID("select employee_id FROM employee WHERE dev_team_id = ", devteamAllID);
 
         deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
 

@@ -62,6 +62,8 @@ public class ScrumTeam extends ScrumMasterCommand {
 
         ArrayList<Integer> sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
         ArrayList<Integer> devteamAllID = getAllID("select dev_team_id FROM dev_team WHERE scrum_team_id = ",scrumAllID);
+        ArrayList<Integer> devTeam = getAllID("select dev_team_id FROM dev_team WHERE sprint_id = ",sprintAllID);
+
 
         // employee id must be changed so we must talk about
         ArrayList<Integer> employeeID = getAllID("select employee_id FROM employee WHERE dev_team_id = ", devteamAllID);
@@ -77,6 +79,7 @@ public class ScrumTeam extends ScrumMasterCommand {
         deleteAllID(scrumMasterItemScrumTeam, devteamAllID);
         
         updateEmployee(devteamAllID);
+        updateEmployee(devTeam);
 
         deleteAllID(devTeamItemScrumTeam, scrumAllID);
         deleteAllID(devTeamItemSprint, sprintAllID);
@@ -90,18 +93,6 @@ public class ScrumTeam extends ScrumMasterCommand {
 
         return null;
     }
-
-    // String linkingSprintBacklogItem = "DELETE FROM linking_sprint_backlog WHERE
-    // scrum_team_id = ?;";
-    // String userStoryItem = "DELETE FROM user_story WHERE sprint_id = ?;";
-    // String standupSprintItem = "DELETE FROM standup WHERE sprint_id = ?;";
-    // String scrumMasterItem = "DELETE FROM scrum_master WHERE sprint_id = ?;";
-    // String employeeDevItem = "DELETE FROM employee WHERE sprint_id = ?;";
-    // String devTeamItem = "DELETE FROM dev_team WHERE sprint_id = ?;";
-    // String sprintItem = "DELETE FROM sprint WHERE sprint_id = ?;";
-    // String projectItem = "select project_id FROM project WHERE scrum_team_id = "
-    // + scrumId + ";";
-
     // ----------------create-------------------------------------
     public void insertFunction() {
         System.out.println("place the id you want to get insert");
