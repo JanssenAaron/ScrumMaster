@@ -51,7 +51,10 @@ public class Sprint extends ScrumMasterCommand {
     }
 
     // ----------------------------------add sprint-----------------------------------------------------------------------------
-    public static Sprint addSprint(java.sql.Time start, java.sql.Time end, String note, int proID) {
+    public void insertFunction(Request req) {
+        addSprint(readDate("enter start date"), readDate("end date"), getString("give notes"), getInt("enter id to connect to id"));
+    }
+    public static Sprint addSprint(java.sql.Date start, java.sql.Date end, String note, int proID) {
         String insert = "INSERT INTO SPRINT" + " (start_date,end_date, notes, project_id) values" + " (?,?,?,?);";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);

@@ -98,20 +98,20 @@ public class ScrumTeam extends ScrumMasterCommand {
         return null;
     }
     // ----------------create-------------------------------------
-    public void insertFunction() {
+    public void insertFunction(Request req) {
         System.out.println("place the id you want to get insert");
-        insertScrumTeam(getId()).toString();
+        insertScrumTeam();
+
     }
 
-    public ScrumTeam insertScrumTeam(int scID) {
+    public ScrumTeam insertScrumTeam() {
         // int scrumId, String summary
-        String insert = "INSERT INTO scrum_team" + " (scrum_team_id ) values" + " (?);";
+        String insert = "INSERT INTO scrum_team (scrum_team_id) VALUES (DEFAULT)";
         try {
-            PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(insert);
-            pstmt.setInt(1, scID);
+            int pstmt = DBConnection.CONNECTION.prepareStatement(insert).executeUpdate();
 
-            ResultSet rsSprint = pstmt.executeQuery();
-            return new ScrumTeam(rsSprint.getInt("scrum_team_id") );
+            System.out.println(pstmt);
+            return new ScrumTeam( );
         } catch (SQLException e) {
             System.out.println(e);
         }
