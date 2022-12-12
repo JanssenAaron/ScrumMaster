@@ -1,6 +1,7 @@
 package scrummaster.dataclasses;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -26,7 +27,16 @@ public class Project extends ScrumMasterCommand {
     public Project() {
     }
     public void listFunction(Request req){
-        
+        String sql = "select * from project";
+        try{
+             ResultSet x =   DBConnection.CONNECTION.prepareStatement(sql).executeQuery();
+             while(x.next()){
+                System.out.println(new Project(x.getInt("project_id"), x.getInt("scrum_team_id"), x.getString("description") ));
+             }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
       }
     //--------------------------------------get--------------------------------------------
     public void getFunction( Request req) {
@@ -89,30 +99,38 @@ public class Project extends ScrumMasterCommand {
     }
     //------------------delete-------------------------
     public void deleteFunction( Request req) {
-        System.out.println("place an id to delete");
-        deleteProject(getId());
+
+        deleteProject(getInt("place an id to delete"));
     }
     public void deleteProject(int pID){
-        LinkedList  projectAllID = new LinkedList<Integer>();
+        ArrayList<Integer> projectAllID = new ArrayList<Integer>();
         projectAllID.add(pID);
-        LinkedList sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
-        
-        deleteAllID("update dev_team set sprint_id = null where sprint_id = ", sprintAllID);
-        
-        LinkedList userStoryyID = getAllID("select user_story FROM sprint WHERE story_id = ", projectAllID);
 
+        ArrayList<Integer> sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
+        ArrayList<Integer> devteamAllID = getAllID("select dev_team_id FROM dev_team WHERE sprint_id = ",sprintAllID);
+
+        // employee id must be changed so we must talk about
+        ArrayList<Integer> employeeID = getAllID("select employee_id FROM employee WHERE dev_team_id = ", devteamAllID);
+
+        ArrayList<Integer> userStoryyID = getAllID("select story_id FROM user_story WHERE project_id = ", projectAllID);
+       
         deleteAllID(linkingSprintBacklogItemStory, userStoryyID);
         deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
 
         deleteAllID(userStoryItem, projectAllID);
         deleteAllID(standupSprintItem, sprintAllID);
+        
+        updateEmployee(devteamAllID);
 
-        deleteAllID(scrumMasterItemScrumTeam, projectAllID);
+        deleteAllID(devTeamItemSprint, sprintAllID);
+              ///look at the problem that certain key is not getting delete 
 
         deleteAllID(sprintItem, projectAllID);
 
         deleteAllID(projectItem, projectAllID);
     }
+    //get 
+    
 
     /**
      * @return the id

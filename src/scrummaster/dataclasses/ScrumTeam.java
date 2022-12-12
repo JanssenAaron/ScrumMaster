@@ -1,6 +1,7 @@
 package scrummaster.dataclasses;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import scrummaster.DBConnection;
@@ -22,60 +23,70 @@ public class ScrumTeam extends ScrumMasterCommand {
 
     // ----------------------get-----------------
     public void getFunction(Request req) {
-        findSprint(getInt("Enter id: ")).toString();
+        System.out.println(findSprint(getInt("Enter id: ")));
+        ;
     }
 
     public ScrumTeam findSprint(int tableId) {
-        String selectEmployee = "select * from sprint"
-                + " where id = ?";
+        String selectEmployee = "select * from scrum_team"
+                + " where scrum_team_id = ?";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
-            return new ScrumTeam(rsscrumteam.getInt("employee_id"));
+            rsscrumteam.next();
+            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"));
         } catch (SQLException e) {
+            System.out.println(e);
             return null;
         }
     }
 
+    public static void main(String[] args) {
+        ScrumTeam x = new ScrumTeam();
+        // System.out.println(x.findSprint(1));
+        x.deleteScrumTeam(1);
+    }
+
     // -------------------------delete---------------------------------------
     public void deleteFunction(Request req) {
-        System.out.println("place the id you want to get rid of");
-        deleteScrumTeam(getId()).toString();
+        deleteScrumTeam(getInt("place the id you want to get rid of"));
     }
 
     public ScrumTeam deleteScrumTeam(int scID) {
- 
-        LinkedList  scrumAllID = new LinkedList<Integer>();
+
+        ArrayList<Integer> scrumAllID = new ArrayList<Integer>();
         scrumAllID.add(scID);
 
-            LinkedList projectAllID = getAllID("select project_id FROM project WHERE scrum_team_id = ", scrumAllID);
-            LinkedList sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
-            LinkedList devteamAllID = getAllID("select dev_team_id FROM sprint WHERE scrum_team_id = ", scrumAllID );
-            // mergeLinkedList( devteamAllID, getAllID("select dev_team_id FROM sprint WHERE sprint_id = ", sprintAllID ) );
-                        //employee id must be changed so we must talk about 
-            LinkedList employeeID = getAllID("select employee_id FROM sprint WHERE dev_team_id = ", devteamAllID);
-            
-            LinkedList userStoryyID = getAllID("select user_story FROM sprint WHERE story_id = ", projectAllID);
+        ArrayList<Integer> projectAllID = getAllID("select project_id FROM project WHERE scrum_team_id = ", scrumAllID);
 
-            deleteAllID(linkingSprintBacklogItemStory, userStoryyID);
-            deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
+        ArrayList<Integer> sprintAllID = getAllID("select sprint_id FROM sprint WHERE project_id = ", projectAllID);
+        ArrayList<Integer> devteamAllID = getAllID("select dev_team_id FROM dev_team WHERE scrum_team_id = ",scrumAllID);
 
-            deleteAllID(userStoryItem, projectAllID);
-            deleteAllID(standupSprintItem, sprintAllID);
+        // employee id must be changed so we must talk about
+        ArrayList<Integer> employeeID = getAllID("select employee_id FROM employee WHERE dev_team_id = ", devteamAllID);
 
-            deleteAllID(scrumMasterItemScrumTeam, projectAllID);
+        ArrayList<Integer> userStoryyID = getAllID("select story_id FROM user_story WHERE project_id = ", projectAllID);
+       
+        deleteAllID(linkingSprintBacklogItemStory, userStoryyID);
+        deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
 
-            deleteAllID(devTeamItemScrumTeam, scrumAllID);
-            deleteAllID(devTeamItemSprint, sprintAllID);
+        deleteAllID(userStoryItem, projectAllID);
+        deleteAllID(standupSprintItem, sprintAllID);
+       //look at dev team forgot to pull scrum and sprint
+        deleteAllID(scrumMasterItemScrumTeam, devteamAllID);
+        
+        updateEmployee(devteamAllID);
 
-            deleteAllID(sprintItem, projectAllID);
+        deleteAllID(devTeamItemScrumTeam, scrumAllID);
+        deleteAllID(devTeamItemSprint, sprintAllID);
+        System.out.println(projectAllID.get(0));
+        deleteAllID(sprintItem, projectAllID);
 
-            deleteAllID(projectItem, scrumAllID);
+        ///look at the problem that certain key is not getting delete 
+        deleteAllID(projectItem, scrumAllID);
 
-            deleteAllID(scrumTeamItem, scrumAllID);
-
-
+        deleteAllID(scrumTeamItem, scrumAllID);
 
         return null;
     }
@@ -90,7 +101,6 @@ public class ScrumTeam extends ScrumMasterCommand {
     // String sprintItem = "DELETE FROM sprint WHERE sprint_id = ?;";
     // String projectItem = "select project_id FROM project WHERE scrum_team_id = "
     // + scrumId + ";";
-
 
     // ----------------create-------------------------------------
     public void insertFunction() {
@@ -130,5 +140,9 @@ public class ScrumTeam extends ScrumMasterCommand {
 
     public void excuteCommandFuncation() {
         System.out.println("no support funcation");
+    }
+
+    public String toString() {// overriding the toString() method
+        return id + "";
     }
 }

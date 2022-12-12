@@ -4,6 +4,7 @@ package scrummaster.dataclasses;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -20,12 +21,12 @@ public class ScrumMasterCommand {
     protected String scrumMasterItemScrumTeam = "DELETE FROM scrum_master  WHERE scrum_team_id = ";
     protected String scrumMasterItemSprint = "DELETE FROM scrum_master  WHERE sprint_id = ";
 
-    protected String devTeamItemSprint = "DELETE FROM dev_team WHERE sprint_id = ?;";
+    protected String devTeamItemSprint = "DELETE FROM dev_team WHERE sprint_id = ";
     protected String devTeamItemScrumTeam = "DELETE FROM dev_team WHERE scrum_team_id = ";
 
-    protected String sprintItem = "DELETE FROM sprint WHERE sprint_id = ?;";
-    protected String projectItem = "DELETE FROM project WHERE sprint_id = ";
-    protected String scrumTeamItem = "DELETE FROM scrum_team WHERE scrum_team_id = ?;";
+    protected String sprintItem = "DELETE FROM sprint WHERE project_id = ";
+    protected String projectItem = "DELETE FROM project WHERE scrum_team_id = ";
+    protected String scrumTeamItem = "DELETE FROM scrum_team WHERE scrum_team_id = ";
 
     // public void excuteCommandFuncation(ScrumMasterCommand scrum, Request req) {
     // req.callMethod(req, scrum);
@@ -100,31 +101,39 @@ public class ScrumMasterCommand {
         }
     }
 
-    public LinkedList getAllID(String scrum, LinkedList<Integer> scrumId) {
-        LinkedList list = new LinkedList<Integer>();
+    public ArrayList<Integer> getAllID(String scrum, ArrayList<Integer> scrumId) {
+        ArrayList list = new ArrayList<Integer>();
         try {
-            while (scrumId.size() != 0) {
-                ResultSet rs = DBConnection.CONNECTION.prepareStatement(scrum + scrumId.removeFirst() + ";")
-                        .executeQuery();
-                // list.add(rs.getInt(0));
+            for (int i = 0; i < scrumId.size(); i++) {
+                ResultSet rs = DBConnection.CONNECTION.prepareStatement(scrum + scrumId.get(i) + ";").executeQuery();
                 while (rs.next()) {
-                    list.add(rs.getInt(0));
+                    list.add(rs.getInt(1));
                 }
+                
             }
             return list;
         } catch (SQLException e) {
+            System.out.println(e);
             return list;
         }
-        // return list;
     }
 
-    public void deleteAllID(String scrum, LinkedList scrumId) {
+    public void deleteAllID(String scrum, ArrayList<Integer> scrumId) {
         try {
-            while (scrumId.size() != 0) {
-                ResultSet rs = DBConnection.CONNECTION.prepareStatement(scrum + scrumId.removeFirst() + ";")
-                        .executeQuery();
+            for (int i = 0; i < scrumId.size(); i++) {
+                DBConnection.CONNECTION.createStatement().executeUpdate(scrum + scrumId.get(i) + ";");
             }
         } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    public void updateEmployee(ArrayList<Integer> scrumId){
+        try {
+            for (int i = 0; i < scrumId.size(); i++) {
+                DBConnection.CONNECTION.createStatement().executeUpdate("update Employee set dev_team_id = null where dev_team_id = " + scrumId.get(i) + ";");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
         }
     }
 }

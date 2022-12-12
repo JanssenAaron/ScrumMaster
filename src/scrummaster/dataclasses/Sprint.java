@@ -1,6 +1,7 @@
 package scrummaster.dataclasses;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import scrummaster.DBConnection;
@@ -91,22 +92,23 @@ public class Sprint extends ScrumMasterCommand {
     public void deleteFunction( Request req) {
         deleteSprintById(1);
     }
-    private static Sprint  deleteSprintById(int id ){
-        String selectItem = "DELETE FROM sprint WHERE sprint_id = ?;";
-        try{
-            DBConnection.CONNECTION.prepareStatement(linkingSprintBacklogItemSprint).executeQuery();
-            DBConnection.CONNECTION.prepareStatement("update dev_team set sprint_id = null where sprint_id = " + id ).executeQuery();
-            PreparedStatement rs = DBConnection.CONNECTION.prepareStatement(selectItem);
-            rs.setInt(id, 1);
-            ResultSet rsSprint = rs.executeQuery();
-            rsSprint.next();
-            return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-            rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
-   
-        }
-        catch(SQLException e){
-            System.out.println(e);
-        }
+    private  Sprint  deleteSprintById(int sID ){
+        ArrayList<Integer> sprintAllID = new ArrayList<Integer>();
+        sprintAllID.add(sID);
+
+        ArrayList<Integer> devteamAllID = getAllID("select dev_team_id FROM dev_team WHERE sprint_id = ",sprintAllID);
+
+        // employee id must be changed so we must talk about
+        ArrayList<Integer> employeeID = getAllID("select employee_id FROM employee WHERE dev_team_id = ", devteamAllID);
+
+        deleteAllID(linkingSprintBacklogItemSprint, sprintAllID);
+
+        deleteAllID(standupSprintItem, sprintAllID);
+        
+        updateEmployee(devteamAllID);
+
+        deleteAllID(devTeamItemSprint, sprintAllID);
+              ///look at the problem that certain key is not getting delete 
         return null;
     }
      // ------------------------basic 
