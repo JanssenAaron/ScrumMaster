@@ -29,19 +29,26 @@ public class Sprint extends ScrumMasterCommand {
         this.notes = text;
         this.projectId = projectID;
     }
-
+    public void getFunction(Request req) {
+        System.out.println(findSprint(getInt("what sprind id do you want:")));
+    }
+    public static void main(String[] args){
+        findSprint(1);
+    }
     public static Sprint findSprint( int tableId) {
         String selectEmployee = "select * from sprint"
-                + " where id = ?";
+                + " where sprint_id = ?";
         try {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
 
             ResultSet rsSprint = pstmt.executeQuery();
+            rsSprint.next();
+            System.out.println(rsSprint.getDate("start_date"));
             return new Sprint(rsSprint.getInt("sprint_id"), rsSprint.getTime("start_date"),
-                    rsSprint.getTime("end_date"), rsSprint.getNString("notes"), rsSprint.getInt("project_id"));
+                    rsSprint.getTime("end_date"), rsSprint.getString("notes"), rsSprint.getInt("project_id"));
         } catch (SQLException e) {
-
+           System.out.println(e);
         }
         return null;
     }
@@ -181,6 +188,6 @@ public class Sprint extends ScrumMasterCommand {
         this.id = id;
     }
     public String toString(){//overriding the toString() method  
-        return id+ " "+ startDate+" "+ endDate + " " + notes + " " +projectId;
+        return " sprint id: "+ id+ " start date: "+ startDate+" end date: "+ endDate + " notes: " + notes + " project_id " +projectId;
        }
 }

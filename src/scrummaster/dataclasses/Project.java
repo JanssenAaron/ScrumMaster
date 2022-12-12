@@ -17,11 +17,18 @@ public class Project extends ScrumMasterCommand {
     private int id;
     private int scrumTeamId;
     private String description;
+    private ScrumTeam scrumgroup;
     
     public Project(int tableId, int scrumId, String summary) {
         id = tableId;
         scrumTeamId = scrumId;
         description = summary;
+    }
+    public Project(int tableId, int scrumId, String summary,ScrumTeam scrum) {
+        id = tableId;
+        scrumTeamId = scrumId;
+        description = summary;
+        scrumgroup = scrum;
     }
     
     public Project() {
@@ -62,7 +69,7 @@ public class Project extends ScrumMasterCommand {
         }
     }
     
-    public ScrumTeam findByScrumTeamId( int tableId) {
+    public Project findByScrumTeamId( int tableId) {
         String selectEmployee = "select * from project"
                 + " inner join scrum_team on "
                 + "scrum_id.scrum_team_id = project.scrum_team_id"
@@ -71,10 +78,14 @@ public class Project extends ScrumMasterCommand {
             PreparedStatement pstmt = DBConnection.CONNECTION.prepareStatement(selectEmployee);
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
-            return new ScrumTeam(rsscrumteam.getInt("employee_id"));
+            rsscrumteam.next();
+            return new Project(rsscrumteam.getInt("employee_id"), 
+            rsscrumteam.getInt("scrum_team_id"),rsscrumteam.getString("description"), new ScrumTeam(rsscrumteam.getInt("scrum_team_id") , rsscrumteam.getInt("scrum_master_id")) );
+            
         } catch (SQLException e) {
             return null;
         }
+        
     }
     
     //-----------------------------------create-----------------------------------------------------------
@@ -166,6 +177,8 @@ public class Project extends ScrumMasterCommand {
         this.description = description;
     }
     public String toString(){//overriding the toString() method  
+        if(scrumgroup != null)
+            return id+ " "+ scrumTeamId+" "+ description + scrumgroup;
         return id+ " "+ scrumTeamId+" "+ description;
        }
     

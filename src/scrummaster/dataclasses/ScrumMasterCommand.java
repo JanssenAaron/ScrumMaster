@@ -102,7 +102,7 @@ public class ScrumMasterCommand {
     }
 
     public ArrayList<Integer> getAllID(String scrum, ArrayList<Integer> scrumId) {
-        ArrayList list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         try {
             for (int i = 0; i < scrumId.size(); i++) {
                 ResultSet rs = DBConnection.CONNECTION.prepareStatement(scrum + scrumId.get(i) + ";").executeQuery();

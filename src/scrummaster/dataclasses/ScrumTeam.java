@@ -13,12 +13,14 @@ public class ScrumTeam extends ScrumMasterCommand {
      * @return the id
      */
     private int id;
-
+    private int scrum_master_id;
     public ScrumTeam() {
     }
 
-    public ScrumTeam(int id) {
+    public ScrumTeam(int id, int scrum_master_id) {
         this.id = id;
+        this.scrum_master_id = scrum_master_id; 
+
     }
 
     // ----------------------get-----------------
@@ -35,7 +37,7 @@ public class ScrumTeam extends ScrumMasterCommand {
             pstmt.setInt(1, tableId);
             ResultSet rsscrumteam = pstmt.executeQuery();
             rsscrumteam.next();
-            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"));
+            return new ScrumTeam(rsscrumteam.getInt("scrum_team_id"), rsscrumteam.getInt(2));
         } catch (SQLException e) {
             System.out.println(e);
             return null;
@@ -107,7 +109,7 @@ public class ScrumTeam extends ScrumMasterCommand {
             pstmt.setInt(1, scID);
 
             ResultSet rsSprint = pstmt.executeQuery();
-            return new ScrumTeam(rsSprint.getInt("scrum_team_id"));
+            return new ScrumTeam(rsSprint.getInt("scrum_team_id") , rsSprint.getInt(2));
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -134,6 +136,6 @@ public class ScrumTeam extends ScrumMasterCommand {
     }
 
     public String toString() {// overriding the toString() method
-        return id + "";
+        return " "+id + "  scrum master id:  " + scrum_master_id;
     }
 }
